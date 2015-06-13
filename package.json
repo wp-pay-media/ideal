@@ -1,0 +1,22 @@
+{
+  "name": "ideal",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "ideal",
+    "media",
+    "logo",
+    "banner",
+    "color",
+    "brand",
+    "identity"
+  ],
+  "author": "Pronamic",
+  "license": "GPL",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-imagemagick": "^0.1.5",
+    "grunt-shell": "^1.1.2",
+    "grunt-svg-modify": "0.0.6"
+  }
+}
