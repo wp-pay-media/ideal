@@ -2,6 +2,61 @@
 
 **iDEAL media for the WordPress payment processing library.**
 
+## Colors
+
+### iDEAL Magenta
+
+**RGB:** `204R/0G/102B`  
+**CMYK:** `0C/100M/0Y/10K`  
+**WEB:** `#CC0066`
+
+*	http://www.color-hex.com/color/cc0066
+*	https://www.colorcodehex.com/cc0066/
+*	http://www.colorhexa.com/cc0066
+*	http://rgb.to/hex/cc0066
+*	http://www.colourlovers.com/color/CC0066/
+*	http://www.colorcombos.com/colors/CC0066
+
+### iDEAL Zwart
+
+**RGB:** `0R/0G/0B`  
+**CMYK:** `0C/0M/0Y/100K`  
+**WEB:** `#000000`
+
+*	http://www.color-hex.com/color/000000
+*	https://www.colorcodehex.com/000000/
+*	http://www.colorhexa.com/000000
+*	http://rgb.to/hex/000000
+*	http://www.colourlovers.com/color/000000/
+*	http://www.colorcombos.com/colors/000000
+
+### iDEAL Grijs
+
+**RGB:** `147R/149G/152B`  
+**CMYK:** `0C/0M/0Y/50K`  
+**WEB:** `#939598`
+
+*	http://www.color-hex.com/color/939598
+*	https://www.colorcodehex.com/939598/
+*	http://www.colorhexa.com/939598
+*	http://rgb.to/hex/939598
+*	http://www.colourlovers.com/color/939598/
+*	http://www.colorcombos.com/colors/939598
+
+### iDEAL Wit
+
+**RGB:** `255R/255G/255B`  
+**CMYK:** `0C/0M/0Y/0K`  
+**WEB:** `#FFFFFF`
+
+*	http://www.color-hex.com/color/FFFFFF
+*	https://www.colorcodehex.com/FFFFFF/
+*	http://www.colorhexa.com/FFFFFF
+*	http://rgb.to/hex/FFFFFF
+*	http://www.colourlovers.com/color/FFFFFF/
+*	http://www.colorcombos.com/colors/FFFFFF
+
+
 ## Links
 
 *	https://www.ideal.nl/
