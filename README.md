@@ -88,6 +88,19 @@
 	*	http://www.easypaymentservices.nl/couch/uploads/image/ideal-logo1.jpg
 
 
+## Install
+
+```shell
+npm install svgexport -g
+brew install homebrew/x11/inkscape
+brew install imagemagick --with-librsvg
+```
+
+*	https://github.com/Homebrew/homebrew-x11
+*	http://stackoverflow.com/questions/9853325/how-to-convert-a-svg-to-a-png-with-image-magick
+*	https://github.com/shakiba/svgexport
+
+
 ## Inspiration
 
 ### GitHub media, logo, branding

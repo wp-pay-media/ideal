@@ -16,6 +16,7 @@
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-imagemagick": "^0.1.5",
+    "grunt-rasterize": "^0.1.7",
     "grunt-shell": "^1.1.2",
     "grunt-svg-modify": "0.0.6"
   }
