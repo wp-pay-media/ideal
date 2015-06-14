@@ -112,3 +112,4 @@ brew install imagemagick --with-librsvg
 *	https://github.com/bitpay/bitpay-brand
 *	https://github.com/logos
 *	https://github.com/github-archive/media
+*	https://github.com/jekyll/brand

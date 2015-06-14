@@ -40,7 +40,7 @@ module.exports = function( grunt ) {
 
 			imagemagick: {
 				command: [
-					'convert -resize 256x256 src/ideal-square-20pct-margin/ideal-square-20pct-margin.svg converted/imagemagick/png/ideal-square-20pct-margin/ideal-square-20pct-margin-256x256.png'
+					'convert -background transparent -resize 256x256 src/ideal-square-20pct-margin/ideal-square-20pct-margin.svg converted/imagemagick/png/ideal-square-20pct-margin/ideal-square-20pct-margin-256x256.png'
 				].join( '&&' )
 			}
 		},
