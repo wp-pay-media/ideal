@@ -1,0 +1,6 @@
+[ {
+	"input": "src/ideal-square-20pct-margin/ideal-square-20pct-margin.svg",
+	"output": [
+		"converted/svgexport/png/ideal-square-20pct-margin/ideal-square-20pct-margin-256x256.png 256:256"
+	]
+} ]
