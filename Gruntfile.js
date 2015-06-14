@@ -93,10 +93,67 @@ module.exports = function( grunt ) {
 		svg_modify: {
 			your_target: {
 				cwd: '',
-	            src: 'src/ideal/',
-	            dest: 'images/'
-	        }
-	    }
+				src: 'src/ideal/',
+				dest: 'images/'
+			}
+		},
+
+		// Test
+		imagematrix: {
+			idealSquareNoMargin: {
+				options: {
+					src: 'src/ideal-square-no-margin/ideal-square-no-margin.svg',
+					dest: 'converted/inkscape/png/ideal-square-no-margin/ideal-square-no-margin-<%= width %>x<%= height %>.png'
+				}
+			},
+			idealSquare20pctMargin: {
+				options: {
+					src: 'src/ideal-square-20pct-margin/ideal-square-20pct-margin.svg',
+					dest: 'converted/inkscape/png/ideal-square-20pct-margin/ideal-square-20pct-margin-<%= width %>x<%= height %>.png'
+				}
+			}
+		}
+	} );
+
+	// Custom
+	grunt.registerMultiTask( 'imagematrix', 'Create images in different formats and sizes', function() {
+		var done = this.async();
+
+		var options = this.options( {
+			src: false,
+			dest: false
+		} );
+
+		console.log( options );
+
+		var data = grunt.file.readJSON( 'convert.json' );
+
+		data.forEach( function( variation ) {
+			var inkscapeArgs = [];
+
+			var filename = grunt.template.process(
+				options.dest,
+				{ data: variation }
+			);
+
+			inkscapeArgs.push( '--export-png' );
+			inkscapeArgs.push( filename );
+			inkscapeArgs.push( '--export-width' );
+			inkscapeArgs.push( variation.width );
+			inkscapeArgs.push( '--export-height' );
+			inkscapeArgs.push( variation.height );
+			inkscapeArgs.push( options.src );
+
+			grunt.util.spawn( {
+				cmd: 'inkscape',
+				args: inkscapeArgs,
+				opts: { stdio: 'inherit' }
+			}, function() {
+				done();
+			} );
+		} );
+
+		done();
 	} );
 
 	// Load
