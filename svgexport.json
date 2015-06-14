@@ -1,6 +1,11 @@
 [ {
 	"input": "src/ideal-square-20pct-margin/ideal-square-20pct-margin.svg",
 	"output": [
-		"converted/svgexport/png/ideal-square-20pct-margin/ideal-square-20pct-margin-256x256.png 256:256"
+		"converted/svgexport/png/ideal-square-20pct-margin/ideal-square-20pct-margin-512x512.png 512:512",
+		"converted/svgexport/png/ideal-square-20pct-margin/ideal-square-20pct-margin-256x256.png 256:256",
+		"converted/svgexport/png/ideal-square-20pct-margin/ideal-square-20pct-margin-128x128.png 128:128",
+		"converted/svgexport/png/ideal-square-20pct-margin/ideal-square-20pct-margin-64x64.png 64:64",
+		"converted/svgexport/png/ideal-square-20pct-margin/ideal-square-20pct-margin-32x32.png 32:32",
+		"converted/svgexport/png/ideal-square-20pct-margin/ideal-square-20pct-margin-16x16.png 16:16"
 	]
 } ]
