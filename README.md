@@ -99,6 +99,7 @@ brew install imagemagick --with-librsvg
 *	https://github.com/Homebrew/homebrew-x11
 *	http://stackoverflow.com/questions/9853325/how-to-convert-a-svg-to-a-png-with-image-magick
 *	https://github.com/shakiba/svgexport
+*	http://www.imagemagick.org/Usage/thumbnails/#favicon
 
 
 ## Inspiration
