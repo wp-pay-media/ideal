@@ -98,62 +98,102 @@ module.exports = function( grunt ) {
 			}
 		},
 
-		// Test
+		// Image Matrix
 		imagematrix: {
+			options: {
+				types: [
+					'png',
+					'pdf',
+					'eps'
+				],
+				sizes: [
+					{ width: 512, height: 512 },
+					{ width: 256, height: 256 },
+					{ width: 128, height: 128 },
+					{ width: 64,  height: 64 },
+					{ width: 32,  height: 32 },
+					{ width: 16,  height: 16 }
+				]
+			},
 			idealSquareNoMargin: {
-				options: {
-					src: 'src/ideal-square-no-margin/ideal-square-no-margin.svg',
-					dest: 'converted/inkscape/png/ideal-square-no-margin/ideal-square-no-margin-<%= width %>x<%= height %>.png'
-				}
+				src: 'src/ideal-square-no-margin/ideal-square-no-margin.svg',
+				dest: 'converted/inkscape/{%= type %}/ideal-square-no-margin/ideal-square-no-margin-{%= width %}x{%= height %}.{%= type %}'
 			},
 			idealSquare20pctMargin: {
-				options: {
-					src: 'src/ideal-square-20pct-margin/ideal-square-20pct-margin.svg',
-					dest: 'converted/inkscape/png/ideal-square-20pct-margin/ideal-square-20pct-margin-<%= width %>x<%= height %>.png'
-				}
+				src: 'src/ideal-square-20pct-margin/ideal-square-20pct-margin.svg',
+				dest: 'converted/inkscape/{%= type %}/ideal-square-20pct-margin/ideal-square-20pct-margin-{%= width %}x{%= height %}.{%= type %}'
 			}
 		}
 	} );
 
-	// Custom
+	// Image Matrix
+	var chalk = require( 'chalk' );
+
 	grunt.registerMultiTask( 'imagematrix', 'Create images in different formats and sizes', function() {
 		var done = this.async();
 
 		var options = this.options( {
-			src: false,
-			dest: false
+			types: [],
+			sizes: []
 		} );
 
-		console.log( options );
+		var data = this.data;
 
-		var data = grunt.file.readJSON( 'convert.json' );
+		grunt.template.addDelimiters( 'imagematrix', '{%', '%}' );
 
-		data.forEach( function( variation ) {
+		var matrix = [];
+
+		var scalableTypes = [ 'eps', 'pdf' ];
+
+		options.types.forEach( function( type ) {
+			if ( scalableTypes.indexOf( type ) < 0 ) {
+				options.sizes.forEach( function( size ) {
+					matrix.push( {
+						type: type,
+						width: size.width,
+						height: size.height
+					} );
+				} );
+			} else {
+				matrix.push( {
+					type: type,
+					width: 100,
+					height: 100
+				} );
+			}
+		} );
+
+		// @see http://stackoverflow.com/a/16641954
+		function loop( item ) {
+			var filename = grunt.template.process( data.dest, {
+				delimiters: 'imagematrix',
+				data: item
+			} );
+
 			var inkscapeArgs = [];
 
-			var filename = grunt.template.process(
-				options.dest,
-				{ data: variation }
-			);
-
-			inkscapeArgs.push( '--export-png' );
+			inkscapeArgs.push( '--export-' + item.type );
 			inkscapeArgs.push( filename );
 			inkscapeArgs.push( '--export-width' );
-			inkscapeArgs.push( variation.width );
+			inkscapeArgs.push( item.width );
 			inkscapeArgs.push( '--export-height' );
-			inkscapeArgs.push( variation.height );
-			inkscapeArgs.push( options.src );
+			inkscapeArgs.push( item.height );
+			inkscapeArgs.push( data.src );
 
 			grunt.util.spawn( {
 				cmd: 'inkscape',
 				args: inkscapeArgs,
-				opts: { stdio: 'inherit' }
+				opts: {
+					stdio: 'inherit'
+				}
 			}, function() {
-				done();
-			} );
-		} );
+				grunt.log.writeln( chalk.green('✔ ') + filename );
 
-		done();
+				matrix.length ? loop( matrix.shift() ) : done();	
+			} );
+		}
+
+		loop( matrix.shift() );
 	} );
 
 	// Load
