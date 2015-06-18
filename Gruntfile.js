@@ -101,10 +101,13 @@ module.exports = function( grunt ) {
 		// Image Matrix
 		imagematrix: {
 			options: {
+				sizeTemplate: '-{%= width %}x{%= height %}',
 				types: [
 					'png',
 					'pdf',
-					'eps'
+					'eps',
+					'jpg',
+					'ico'
 				],
 				sizes: [
 					{ width: 512, height: 512 },
@@ -117,17 +120,18 @@ module.exports = function( grunt ) {
 			},
 			idealSquareNoMargin: {
 				src: 'src/ideal-square-no-margin/ideal-square-no-margin.svg',
-				dest: 'converted/inkscape/{%= type %}/ideal-square-no-margin/ideal-square-no-margin-{%= width %}x{%= height %}.{%= type %}'
+				dest: 'converted/inkscape/{%= type %}/ideal-square-no-margin/ideal-square-no-margin{%= size %}.{%= type %}'
 			},
 			idealSquare20pctMargin: {
 				src: 'src/ideal-square-20pct-margin/ideal-square-20pct-margin.svg',
-				dest: 'converted/inkscape/{%= type %}/ideal-square-20pct-margin/ideal-square-20pct-margin-{%= width %}x{%= height %}.{%= type %}'
+				dest: 'converted/inkscape/{%= type %}/ideal-square-20pct-margin/ideal-square-20pct-margin{%= size %}.{%= type %}'
 			}
 		}
 	} );
 
 	// Image Matrix
 	var chalk = require( 'chalk' );
+	var path = require( 'path' );
 
 	grunt.registerMultiTask( 'imagematrix', 'Create images in different formats and sizes', function() {
 		var done = this.async();
@@ -143,10 +147,12 @@ module.exports = function( grunt ) {
 
 		var matrix = [];
 
-		var scalableTypes = [ 'eps', 'pdf' ];
+		var sizeTypes = [ 'png', 'jpg', 'ico' ];
+		var inkscapeTypes = [ 'png', 'eps', 'pdf' ];
+		var imageMagickTypes = [ 'jpg', 'txt', 'ico' ];
 
 		options.types.forEach( function( type ) {
-			if ( scalableTypes.indexOf( type ) < 0 ) {
+			if ( sizeTypes.indexOf( type ) >= 0 ) {
 				options.sizes.forEach( function( size ) {
 					matrix.push( {
 						type: type,
@@ -156,44 +162,99 @@ module.exports = function( grunt ) {
 				} );
 			} else {
 				matrix.push( {
-					type: type,
-					width: 100,
-					height: 100
+					type: type
+				} );
+			}
+		} );
+
+		var commands = [];
+
+		matrix.forEach( function( item ) {
+			var fileTemplateData = {
+				width: item.width,
+				height: item.height,
+				type: item.type,
+				size: options.sizeTemplate
+			};
+
+			if ( sizeTypes.indexOf( item.type ) < 0 ) {
+				fileTemplateData.size = '';
+			}
+
+			var file = grunt.template.process( data.dest, {
+				delimiters: 'imagematrix',
+				data: fileTemplateData
+			} );
+
+			// Inkscape
+			if ( inkscapeTypes.indexOf( item.type ) >= 0 ) {
+				var inkscapeArgs = [];
+
+				inkscapeArgs.push( '--export-' + item.type );
+				inkscapeArgs.push( file );
+
+				if ( sizeTypes.indexOf( item.type ) >= 0 ) {
+					inkscapeArgs.push( '--export-width' );
+					inkscapeArgs.push( item.width );
+
+					inkscapeArgs.push( '--export-height' );
+					inkscapeArgs.push( item.height );
+				} 
+
+				inkscapeArgs.push( data.src );
+
+				commands.push( {
+					cmd: 'inkscape',
+					args: inkscapeArgs,
+					file: file
+				} );
+			}
+
+			// ImageMagick
+			if ( imageMagickTypes.indexOf( item.type ) >= 0 ) {
+				var imageMagickArgs = [];
+
+				imageMagickArgs.push( data.src );
+
+				if ( sizeTypes.indexOf( item.type ) >= 0 ) {
+					imageMagickArgs.push( '-resize' );
+					imageMagickArgs.push( item.width + 'x' + item.height );
+				}
+
+				imageMagickArgs.push( file );
+
+				commands.push( {
+					cmd: 'convert',
+					args: imageMagickArgs,
+					file: file
 				} );
 			}
 		} );
 
 		// @see http://stackoverflow.com/a/16641954
-		function loop( item ) {
-			var filename = grunt.template.process( data.dest, {
-				delimiters: 'imagematrix',
-				data: item
-			} );
+		function loop( command ) {
+			var dir = path.dirname( command.file );
 
-			var inkscapeArgs = [];
-
-			inkscapeArgs.push( '--export-' + item.type );
-			inkscapeArgs.push( filename );
-			inkscapeArgs.push( '--export-width' );
-			inkscapeArgs.push( item.width );
-			inkscapeArgs.push( '--export-height' );
-			inkscapeArgs.push( item.height );
-			inkscapeArgs.push( data.src );
+			if ( ! grunt.file.isDir( dir ) ) {
+				grunt.file.mkdir( dir );
+			}
 
 			grunt.util.spawn( {
-				cmd: 'inkscape',
-				args: inkscapeArgs,
+				cmd: command.cmd,
+				args: command.args,
 				opts: {
 					stdio: 'inherit'
 				}
 			}, function() {
-				grunt.log.writeln( chalk.green('✔ ') + filename );
+				grunt.log.writeln( command.cmd + ' ' + command.args.join( ' ' ) );
+				grunt.log.writeln( chalk.green( '✔ ' ) + command.file );
+				grunt.log.writeln();
 
-				matrix.length ? loop( matrix.shift() ) : done();	
+				commands.length ? loop( commands.shift() ) : done();	
 			} );
 		}
 
-		loop( matrix.shift() );
+		loop( commands.shift() );
 	} );
 
 	// Load
